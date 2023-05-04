@@ -18,12 +18,18 @@ class BqspClient {
     });
   }
 
-  Future<T> query<T extends Message>(Uint8List message) async {
+  Future<T> query<T extends Message>(Message message) async {
     final queuePointer = _queuePointer;
     _queuePointer = _queuePointer % 3 + 1;
     _messages[queuePointer] = Completer<Message>();
 
-    send(message);
+    final messageBytes = _buildMessage(
+      message.getSize(),
+      message.getType(),
+      queuePointer,
+      message.toBytes(),
+    );
+    send(messageBytes);
 
     final res = await _messages[queuePointer]!.future;
     _messages.remove(queuePointer);
@@ -35,14 +41,25 @@ class BqspClient {
 
   void close() => _socket.destroy();
 
+  Uint8List _buildMessage(int size, int type, int queue, Uint8List message) {
+    final header = Uint8List.fromList([
+      size & 0xFF,
+      (size >> 8) & 0xFF,
+      (size >> 16) & 0xFF,
+      (size >> 24) & 0xFF,
+      type & 0xFF,
+      (type >> 8) & 0xFF,
+      queue & 0xFF,
+    ]);
+    return Uint8List.fromList([...header, ...message]);
+  }
+
   Message _parseMessage(Uint8List message) {
     final type = _getType(message);
     final body = message.sublist(7);
     switch (type) {
-      case 0x1:
-        return AddFriend.fromMessage(body);
-      case 0xE:
-        return RateUser.fromMessage(body);
+      case Ok.type:
+        return const Ok();
       default:
         throw Exception('Unknown message type: $type');
     }
