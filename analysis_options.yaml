@@ -1,36 +1,6 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lints/recommended.yaml
 
 linter:
   rules:
-    always_declare_return_types: true
-    always_require_non_null_named_parameters: true
-    annotate_overrides: true
-    avoid_empty_else: true
-    avoid_init_to_null: true
-    avoid_null_checks_in_equality_operators: true
-    avoid_print: true
-    avoid_relative_lib_imports: true
-    avoid_return_types_on_setters: true
-    avoid_returning_null_for_future: true
-    avoid_shadowing_type_parameters: true
-    avoid_single_cascade_in_expression_statements: true
-    avoid_types_as_parameter_names: true
-    avoid_web_libraries_in_flutter: true
-    await_only_futures: true
-    camel_case_extensions: true
-    camel_case_types: true
-    curly_braces_in_flow_control_structures: false
-    empty_constructor_bodies: true
-    empty_statements: true
-    eol_at_end_of_file: true
-    file_names: true
-    implementation_imports: true
-    no_duplicate_case_values: true
-    prefer_conditional_assignment: true
-    prefer_final_fields: true
-    prefer_interpolation_to_compose_strings: true
     prefer_single_quotes: true
-    unnecessary_brace_in_string_interps: true
-    unnecessary_statements: true
-    unrelated_type_equality_checks: true
-    valid_regexps: true
+    prefer_const_constructors: true
