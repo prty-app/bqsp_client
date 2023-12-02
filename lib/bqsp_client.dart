@@ -1,3 +1,4 @@
+/// A Dart client for the BQSP protocol.
 library;
 
 import 'dart:async';
@@ -12,6 +13,7 @@ export 'src/data_type.dart';
 export 'src/message.dart';
 export 'src/header.dart';
 
+/// A Dart client for the BQSP protocol.
 class BqspClient {
   final String host;
   final int port;
@@ -22,8 +24,19 @@ class BqspClient {
   Socket? _socket;
   int _queue = 1;
 
+  /// Creates a new instance of the BqspClient.
+  ///
+  /// This constructor initializes a new BqspClient with the provided host and port.
+  /// The host and port are used to establish a connection to the server
+  /// when the `connect` method is called.
   BqspClient(this.host, this.port);
 
+  /// Establishes a connection to a server.
+  ///
+  /// This method creates a socket connection to the specified host and port.
+  /// The connection attempt will timeout after 10 seconds.
+  ///
+  /// This is an asynchronous method, and it returns a `Future<void>`.
   Future<void> connect() async {
     _socket = await Socket.connect(
       host,
@@ -39,10 +52,16 @@ class BqspClient {
     );
   }
 
+  /// Sends a message to the server.
+  ///
+  /// This method creates a new message with the given type and body,
+  /// and sends it to the server. The message is added to the socket's write buffer,
+  /// and the buffer is then flushed to ensure that the message is sent immediately.
+  ///
+  /// This is an asynchronous method, and it returns a `Future<Message?>`.
+  /// The future completes when a response to the sent message is received.
   Future<Message?> send(DataType type, Object body) async {
-    final message = Message(type, _queue, {
-      'data': body,
-    });
+    final message = Message(type, _queue, body);
     _incrementQueue();
 
     _completers[message.header.queue] = Completer();
@@ -53,6 +72,12 @@ class BqspClient {
     return _completers[message.header.queue]?.future;
   }
 
+  /// Closes the connection to the server.
+  ///
+  /// This method completes all pending requests with the message 'Connection closed'
+  /// and then closes the socket connection to the server.
+  ///
+  /// This is an asynchronous method, and it returns a `Future<void>`.
   Future<void> close() async {
     _completeAll('Connection closed');
     await _socket?.close();
