@@ -7,7 +7,7 @@ void main() async {
   final client = BqspClient(serverHost, serverPort);
   await client.connect();
 
-  final response = await client.send(DataType.echo, 'Test message');
+  final response = await client.send(4, 'Test message');
   print('Received response: ${response?.body}');
 
   await client.close();

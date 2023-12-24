@@ -1,10 +1,8 @@
 import 'dart:typed_data';
 
-import 'data_type.dart';
-
 class Header {
   late final int bodyLength;
-  late final DataType dataType;
+  late final int dataType;
   late final int queue;
 
   Header(this.bodyLength, this.dataType, this.queue)
@@ -13,7 +11,7 @@ class Header {
   Header.fromBytes(Uint8List bytes) {
     bodyLength =
         bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
-    dataType = DataType.fromId(bytes[4] | (bytes[5] << 8));
+    dataType = bytes[4] | (bytes[5] << 8);
     queue = bytes[6];
   }
 
@@ -23,8 +21,8 @@ class Header {
       (bodyLength >> 8) & 0xFF,
       (bodyLength >> 16) & 0xFF,
       (bodyLength >> 24) & 0xFF,
-      dataType.id & 0xFF,
-      (dataType.id >> 8) & 0xFF,
+      dataType & 0xFF,
+      (dataType >> 8) & 0xFF,
       queue & 0xFF,
     ]);
   }

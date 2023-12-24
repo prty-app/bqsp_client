@@ -8,7 +8,7 @@ void main() {
   group('Header Tests', () {
     test('Header initialization', () {
       final int bodyLength = 100;
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
 
       final Header header = Header(bodyLength, dataType, queue);
@@ -26,13 +26,13 @@ void main() {
       final Header header = Header.fromBytes(bytes);
 
       expect(header.bodyLength, equals(100));
-      expect(header.dataType, equals(DataType.fromId(1)));
+      expect(header.dataType, equals(1));
       expect(header.queue, equals(42));
     });
 
     test('Header toBytes', () {
       final int bodyLength = 100;
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
 
       final Header header = Header(bodyLength, dataType, queue);
@@ -47,11 +47,11 @@ void main() {
 
     test('Header queue validation', () {
       expect(
-        () => Header(100, DataType.fromId(1), 256),
+        () => Header(100, 1, 256),
         throwsA(isA<AssertionError>()),
       );
       expect(
-        () => Header(100, DataType.fromId(1), 0),
+        () => Header(100, 1, 0),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -59,7 +59,7 @@ void main() {
 
   group('Message Tests', () {
     test('Message initialization', () {
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
       final Map<String, dynamic> body = {'key': 'value'};
 
@@ -72,7 +72,7 @@ void main() {
     });
 
     test('Message fromBytes', () {
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
       final Map<String, dynamic> body = {'key': 'value'};
       final Message originalMessage = Message(dataType, queue, body);
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('Message fromHeader', () {
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
       final Map<String, dynamic> body = {'key': 'value'};
       final Message originalMessage = Message(dataType, queue, body);
@@ -105,7 +105,7 @@ void main() {
     });
 
     test('Message toBytes', () {
-      final DataType dataType = DataType.fromId(1);
+      final int dataType = 1;
       final int queue = 42;
       final Map<String, dynamic> body = {'key': 'value'};
       final Message message = Message(dataType, queue, body);
@@ -122,25 +122,13 @@ void main() {
 
     test('Message queue validation', () {
       expect(
-        () => Message(DataType.fromId(1), 256, {}),
+        () => Message(1, 256, {}),
         throwsA(isA<AssertionError>()),
       );
       expect(
-        () => Message(DataType.fromId(1), 0, {}),
+        () => Message(1, 0, {}),
         throwsA(isA<AssertionError>()),
       );
-    });
-  });
-
-  group('DataType Tests', () {
-    test('DataType ids are unique', () {
-      final Set<int> ids = DataType.values.map((type) => type.id).toSet();
-      expect(ids.length, equals(DataType.values.length));
-    });
-
-    test('DataType.fromId returns DataType.unknown for unknown ids', () {
-      expect(DataType.fromId(-1), equals(DataType.unknown));
-      expect(DataType.fromId(100), equals(DataType.unknown));
     });
   });
 }

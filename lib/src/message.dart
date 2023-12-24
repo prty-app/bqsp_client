@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'data_type.dart';
 import 'header.dart';
 
 class Message {
@@ -9,7 +8,7 @@ class Message {
   late final Object body;
   late final Uint8List rawBody;
 
-  Message(DataType dataType, int queue, this.body) {
+  Message(int dataType, int queue, this.body) {
     assert(queue > 0 && queue <= 255);
     rawBody = Uint8List.fromList(utf8.encode(jsonEncode(body)));
     header = Header(rawBody.length, dataType, queue);

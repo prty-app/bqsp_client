@@ -5,11 +5,9 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'src/data_type.dart';
 import 'src/header.dart';
 import 'src/message.dart';
 
-export 'src/data_type.dart';
 export 'src/message.dart';
 export 'src/header.dart';
 
@@ -60,7 +58,7 @@ class BqspClient {
   ///
   /// This is an asynchronous method, and it returns a `Future<Message?>`.
   /// The future completes when a response to the sent message is received.
-  Future<Message?> send(DataType type, Object body) async {
+  Future<Message?> send(int type, Object body) async {
     final message = Message(type, _queue, body);
     _incrementQueue();
 
