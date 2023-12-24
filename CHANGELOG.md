@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Removed `DataType`s because they can differ between server implementations
+
 ## 0.1.1
 
 - Added documentation to `BqspClient`

@@ -12,7 +12,7 @@ To use BQSP Client in your Flutter project, add the following dependency to your
 
 ```yaml
 dependencies:
-  bqsp_client: ^0.1.0
+  bqsp_client: ^0.2.0
 ```
 
 Then, run: 
@@ -35,7 +35,7 @@ await client.connect();
 
 3. Send a request with a type and a body
 ```dart
-final response = await client.send(DataType.echo, 'Test message');
+final response = await client.send(4, 'Test message');
 ```
 
 4. Close connection
