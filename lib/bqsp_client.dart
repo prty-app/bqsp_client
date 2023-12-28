@@ -16,11 +16,11 @@ class BqspClient {
   final String host;
   final int port;
 
-  final Map<int, Completer<Message>> _completers = {};
+  final List<Completer<Message>> _completers = [];
+  final int _queue = 1;
 
   Header? _header;
   Socket? _socket;
-  int _queue = 1;
 
   /// Creates a new instance of the BqspClient.
   ///
@@ -60,14 +60,14 @@ class BqspClient {
   /// The future completes when a response to the sent message is received.
   Future<Message?> send(int type, Object body) async {
     final message = Message(type, _queue, body);
-    _incrementQueue();
 
-    _completers[message.header.queue] = Completer();
+    final completer = Completer<Message>();
+    _completers.add(completer);
 
     _socket?.add(message.toBytes());
     await _socket?.flush();
 
-    return _completers[message.header.queue]?.future;
+    return completer.future;
   }
 
   /// Closes the connection to the server.
@@ -97,8 +97,8 @@ class BqspClient {
     final body = data.sublist(0, bodyLength);
     final message = Message.fromHeader(_header!, body);
 
-    _completers[message.header.queue]?.complete(message);
-    _completers.remove(message.header.queue);
+    final completer = _completers.removeAt(0);
+    completer.complete(message);
 
     _header = null;
 
@@ -108,9 +108,9 @@ class BqspClient {
   }
 
   void _completeAll(String reason) {
-    _completers.forEach((_, completer) {
+    for (final completer in _completers) {
       completer.completeError(reason);
-    });
+    }
   }
 
   void _onDone() {
@@ -120,12 +120,5 @@ class BqspClient {
 
   void _onError(dynamic error) {
     _completeAll('Connection error: $error');
-  }
-
-  void _incrementQueue() {
-    _queue = _queue + 1;
-    if (_queue > 255) {
-      _queue = 1;
-    }
   }
 }
