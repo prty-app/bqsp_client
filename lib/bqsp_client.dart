@@ -19,8 +19,12 @@ class BqspClient {
   final List<Completer<Message>> _completers = [];
   final int _queue = 1;
 
+  bool _connected = false;
   Header? _header;
   Socket? _socket;
+
+  /// Returns whether the client is connected to a server.
+  bool get connected => _connected;
 
   /// Creates a new instance of the BqspClient.
   ///
@@ -41,7 +45,7 @@ class BqspClient {
       port,
       timeout: const Duration(seconds: 10),
     );
-
+    _connected = true;
     _socket?.listen(
       _onData,
       onDone: _onDone,
@@ -78,6 +82,7 @@ class BqspClient {
   /// This is an asynchronous method, and it returns a `Future<void>`.
   Future<void> close() async {
     _completeAll('Connection closed');
+    _connected = false;
     await _socket?.close();
   }
 
@@ -115,10 +120,12 @@ class BqspClient {
 
   void _onDone() {
     _completeAll('Connection closed by the server');
+    _connected = false;
     _socket?.close();
   }
 
   void _onError(dynamic error) {
     _completeAll('Connection error: $error');
+    _connected = false;
   }
 }

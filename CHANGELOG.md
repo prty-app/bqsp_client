@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Added `connected` getter to `BqspClient`
+
 ## 0.3.0
 
 - Set queue number permanently to `1`
