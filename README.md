@@ -12,7 +12,7 @@ To use BQSP Client in your Flutter project, add the following dependency to your
 
 ```yaml
 dependencies:
-  bqsp_client: ^0.2.0
+  bqsp_client: ^0.3.1
 ```
 
 Then, run: 
