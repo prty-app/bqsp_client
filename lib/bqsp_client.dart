@@ -91,6 +91,10 @@ class BqspClient {
   }
 
   void _readBytes(Uint8List data) {
+    if (_completers.isEmpty) {
+      return;
+    }
+
     if (_header == null) {
       _header = Header.fromBytes(data.sublist(0, 7));
       if (data.length > 7) {
@@ -113,7 +117,8 @@ class BqspClient {
   }
 
   void _completeAll(String reason) {
-    for (final completer in _completers) {
+    while (_completers.isNotEmpty) {
+      final completer = _completers.removeAt(0);
       completer.completeError(reason);
     }
   }
