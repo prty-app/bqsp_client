@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Fixed `Future already completed` error
+
 ## 0.3.1
 
 - Added `connected` getter to `BqspClient`
